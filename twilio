@@ -1,0 +1,25 @@
+ function Twilio() {
+  this.accountId = 'AC62cde07c9dde0afe4c44938fcef89f14';
+  this.secret = '14b1651bb14408b378095c32f529f691';
+}
+
+var http = require('http');
+
+Twilio.prototype.send = function(message, number){
+  var post_data = {
+    To: number,
+    From: '+19712701550',
+    Body: message
+  };
+  var options = {
+    url: 'https://api.twilio.com/2010-04-01/Accounts/AC62cde07c9dde0afe4c44938fcef89f14/Messages.json',
+    authCreds: [this.accountId, this.secret],
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    params: post_data
+  };
+
+  return http.request(options);
+}

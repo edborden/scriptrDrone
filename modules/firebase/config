@@ -1,0 +1,2 @@
+ // your Firebase project name
+var projectName = 'https://highgroundredhook.firebaseio.com/';

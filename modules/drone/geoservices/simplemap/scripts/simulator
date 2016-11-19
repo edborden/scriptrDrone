@@ -1,0 +1,15 @@
+var http = require("http");
+var requestObject = {
+  url: "http://api.dronesmith.io/api/drone/elegant_brattain/position",
+  headers: {
+    'user-key': '3824a348-8048-4593-840a-fc785d214415',
+    'user-email': 'atthack@dronesmith.io'
+  },
+  method: "GET" // optional if GET
+}
+var response = http.request(requestObject);
+var responseBodyStr = JSON.parse(response.body);
+var payload = JSON.stringify([{id:"1234", lat: responseBodyStr.Latitude, lng: responseBodyStr.Longitude}]);
+console.log(payload);
+publish("map", payload);
+return responseBodyStr;
