@@ -1,0 +1,50 @@
+var http = require("http");
+var requestObject = {
+  url: "http://api.dronesmith.io/api/drone/elegant_brattain/sensor/sound_sensor",
+  headers: {
+    'user-key': '3824a348-8048-4593-840a-fc785d214415',
+    'user-email': 'atthack@dronesmith.io'
+  }
+}
+
+var res = http.request(requestObject);
+
+var reading = [Date.now(), JSON.parse(res.body).intensity];
+
+var documents = require("document");
+var record = documents.get("readings");
+
+var now = new Date().valueOf();
+if (record.metadata.status == "success") {
+  
+}
+
+// record the current record
+var fields = {
+    "key": "readings",
+    "timestamp": now,
+    "meta.types": {
+        "timestamp": "numeric"
+    }
+};
+
+if (duration) {
+  fields.duration = duration;
+  fields["meta.types"].duration = "numeric";
+}
+
+if (lastDuration) {
+  fields.lastDuration = lastDuration;
+  fields["meta.types"].lastDuration = "numeric";
+}
+
+documents.save(fields);
+
+
+
+
+if (!storage.local.sensor) {
+  storage.local.sensor = [];
+}
+storage.local.sensor.push(reading);
+return storage.local.sensor;

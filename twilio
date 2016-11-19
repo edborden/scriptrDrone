@@ -1,18 +1,24 @@
- function Twilio() {
-  this.accountId = 'AC62cde07c9dde0afe4c44938fcef89f14';
-  this.secret = '14b1651bb14408b378095c32f529f691';
-}
 
 var http = require('http');
+var ethelTwilioConfig = {
+  phone: '14123019747',
+  accountId: 'AC3a55f18194c377efd04a06bfc999d1e9', 
+  secret: '846c5531362ec5063113e92811af41b6'
+}
+
+function Twilio() {
+  this.accountId = ethelTwilioConfig.accountId;
+  this.secret = ethelTwilioConfig.secret;
+}
 
 Twilio.prototype.send = function(message, number){
   var post_data = {
     To: number,
-    From: '+19712701550',
+    From: ethelTwilioConfig.phone,
     Body: message
   };
   var options = {
-    url: 'https://api.twilio.com/2010-04-01/Accounts/AC62cde07c9dde0afe4c44938fcef89f14/Messages.json',
+    url: 'https://api.twilio.com/2010-04-01/Accounts/AC3a55f18194c377efd04a06bfc999d1e9/Messages.json',
     authCreds: [this.accountId, this.secret],
     method: 'POST',
     headers: {
@@ -20,6 +26,7 @@ Twilio.prototype.send = function(message, number){
     },
     params: post_data
   };
-
-  return http.request(options);
+  
+  var response = http.request(options);
+  console.log('twilio response ' + JSON.stringify(response));
 }

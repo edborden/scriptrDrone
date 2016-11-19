@@ -20,5 +20,5 @@ var config = {
     output: "terrain", // sample
     channel: "map", // The scriptr.io channel to subscribe the map to (it will receive data from that channel)
     callback: "" // you can specify your own callback function here (callback to be defined in datahandler.js)
-  }  
+  }
 };

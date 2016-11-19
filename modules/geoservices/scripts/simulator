@@ -4,12 +4,25 @@ var requestObject = {
   headers: {
     'user-key': '3824a348-8048-4593-840a-fc785d214415',
     'user-email': 'atthack@dronesmith.io'
-  },
-  method: "GET" // optional if GET
+  }
 }
 var response = http.request(requestObject);
 var responseBodyStr = JSON.parse(response.body);
-var payload = JSON.stringify([{id:"1234", lat: responseBodyStr.Latitude, lng: responseBodyStr.Longitude}]);
+
+var payload = {id:"elegant_brattain", lat: responseBodyStr.Latitude, lng: responseBodyStr.Longitude}
+
+var requestObject = {
+  url: "http://api.dronesmith.io/api/drone/elegant_brattain/sensor/sound_sensor",
+  headers: {
+    'user-key': '3824a348-8048-4593-840a-fc785d214415',
+    'user-email': 'atthack@dronesmith.io'
+  }
+}
+var response = http.request(requestObject);
+var intensity = JSON.parse(response.body).intensity;
+payload.intensity = intensity;
+
+var payload = JSON.stringify(payload);
 console.log(payload);
 publish("map", payload);
-return responseBodyStr;
+return payload;

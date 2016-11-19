@@ -13,34 +13,42 @@ var markers = {};
  * @param {Object} [map]: google map object
  */
 function defaultCallback(obj) {
-  console.log(obj);
-  var jsonObj = JSON.parse(obj);
-  if (jsonObj instanceof Array) {
-  
-    for (var i = 0; jsonObj && i < jsonObj.length; i++) {
+
+  var data = JSON.parse(obj);
+  console.log(data);
+  if (data.lat) {
+    var marker = new google.maps.Marker({
+
+      position: {lat:data.lat, lng: data.lng},
+      map: map,
+      icon: getIcon(data.type),
+      title: "id:" +  data.id
+    });
+
+    //markers[data.id] = data;
+
+    var latlng = new google.maps.LatLng(data.lat, data.lng);
+    // update heat map
+    console.log('latlng',latlng);
+    var points = heatmap.get('data');
+    console.log('points',points);
+    points.push({location: latlng, weight: data.intensity});
+    console.log('afterpointspush');
+    // Center on coordinate
+    //map.panTo(latlng);
+    console.log('aftermappan');
+    // Update polyfill path
+    //var path = flightPath.getPath();
+    //console.log('path',path);
+    //path.push(latlng);
+    // Update marker
+    console.log('beforemarkersetposition',latlng)
+    marker.setPosition(latlng);
+    //document.getElementById('headsup-text').innerHTML = "Point: " + data.point + "&nbsp&nbsp&nbspLat: " + data.lat.toFixed(6) + "&nbsp&nbsp&nbspLon: " +  data.lon.toFixed(6) + "&nbsp&nbsp&nbspAlt: " +
+    //data.altitude.toFixed(3) + "&nbsp&nbsp&nbspIntensity: " + data.intensity.toFixed(6)
     
-      var asset = jsonObj[i];
-      var marker = new google.maps.Marker({
-    
-        position: {lat:Number(asset.lat), lng: Number(asset.lng)},
-        map: map,
-        icon: getIcon(asset.type),
-        title: "id:" +  asset.id
-      });
-      
-      markers[asset.id] = asset;
-    }
-  }else {
-    
-    if (!obj.status == "success"){
-      
-      throw {
-        
-        errorCode: "Cannot_Subsribe_To_Channel",
-        errorDetail: "defaultCallback: could not subscribe to channel. " + JSON.stringify(obj)
-      };
-    }
   }
+
 }
 
 function getIcon(type) {
