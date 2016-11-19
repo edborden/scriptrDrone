@@ -13,7 +13,7 @@ var markers = {};
  * @param {Object} [map]: google map object
  */
 function defaultCallback(obj) {
-  
+  console.log(obj);
   var jsonObj = JSON.parse(obj);
   if (jsonObj instanceof Array) {
   

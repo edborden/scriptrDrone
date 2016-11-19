@@ -5,10 +5,10 @@
 var config = {
   
   // Your scriptr.io endpoint
-  url: "wss://edborden.scriptrapps.io/", // do not forget the final "/" 
+  url: "wss://dronesmith.scriptrapps.io/", // do not forget the final "/" 
   
   // Token of your scriptr.io account
-  token: "RDU0OTQ3RDJDNQ==",
+  token: "RkY4Mzk1MTc0Rg==",
   
   // Google map configuration
   map: {
