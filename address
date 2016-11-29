@@ -1,3 +1,47 @@
 var logger = require('log');
 logger.setLevel('DEBUG');
-logger.debug(request);
+logger.debug(JSON.stringify(request));
+var http = require('http');
+var twilioLib = require('twilio');
+var twilio = new twilioLib.Twilio();
+var message = request.parameters["Body"];
+var targetPhone = request.parameters["From"];
+var twilres;
+var inboundMessage = request.parameters["Body"].toLowerCase();
+if (inboundMessage === 'status' || inboundMessage === 'sup bae') {
+  
+  var jsonStatus = JSON.parse(storage.global.status);
+  var statusString = "im here boo: https://www.google.com/maps/preview/@" + jsonStatus.lat + "," + jsonStatus.lng + ",12z .. sensor be like " + jsonStatus.intensity + ".";
+  twilres = twilio.send(statusString, targetPhone);
+} else {
+  
+  if (inboundMessage === 'go home' || inboundMessage === 'come home bae') {
+    twilres = twilio.send("Be right there boo <3", targetPhone);
+  } else {
+    var mapquestLib = require('mapquest');
+    var mapquest = new mapquestLib.Mapquest();
+    var latlng = mapquest.addressToLatLong(inboundMessage);
+    
+    var body = {
+      'lat': latlng.lat, 
+      'lon': latlng.lng,
+      'speed': 20
+    };
+
+    var requestObject = {
+      url: "http://api.dronesmith.io/api/drone/elegant_brattain/goto",
+      headers: {
+        'user-key': '3824a348-8048-4593-840a-fc785d214415',
+        'user-email': 'atthack@dronesmith.io',
+        'Content-Type':     'application/json'
+      },
+      bodyString: JSON.stringify(body),
+      method: "POST"
+    }
+    var twilres = http.request(requestObject);
+    twilres = twilio.send("oooooo my fav place", targetPhone);
+  }
+
+}
+logger.debug(JSON.stringify(requestObject));
+return twilres;

@@ -1,0 +1,44 @@
+var http = require('http');
+var airspaceLib = require('airspace');
+var twilioLib = require('twilio');
+var mapquestLib = require('mapquest');
+var airspace = new airspaceLib.Airspace();
+var twilio = new twilioLib.Twilio();
+var mapquest = new mapquestLib.Mapquest();
+var ethelPhone = '14123774379';
+
+function sendDroneNotifications (locationStart, locationEnd) {
+  var shapePoints = mapquest.post(locationStart, locationEnd);
+  var index;
+  var airTriggers = [];
+  var userTriggers = [];
+  
+  var byInterval = Math.round(shapePoints.length/10);
+  if (byInterval % 2 !== 0) {
+    byInterval +=1;
+  }
+  
+  for (index = 0; index < shapePoints.length; index+=(byInterval+2)) {
+    var latitude = shapePoints[index];
+    var longitude = shapePoints[index+1];
+   
+    var triggers = airspace.get(latitude, longitude);
+    airTriggers = airTriggers.concat(triggers.air);
+    userTriggers = userTriggers.concat(triggers.user);
+  }
+  
+  for (index = 0; index < airTriggers.length; index++) {
+    var airTrigger = airTriggers[index];
+    if (airTrigger.phone) {
+      console.log('sending to air phone ' + airTrigger.phone);
+    //	twilio.send('Warning: drone will fly through your airspace!', phone);
+    }
+  }
+  
+  if (userTriggers.length > 0) {
+     console.log('sending to user phone ' + ethelPhone);
+   // twilio.send('Warning: your drone will fly through turbulent conditions!', ethelPhone)
+  }  
+}
+
+sendDroneNotifications('308 East 8th Street, Brooklyn, NY 11218', '171 East Victoria St. Hanford, CA 93230');

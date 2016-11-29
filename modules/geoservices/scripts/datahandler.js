@@ -17,13 +17,13 @@ function defaultCallback(obj) {
   var data = JSON.parse(obj);
   console.log(data);
   if (data.lat) {
-    var marker = new google.maps.Marker({
+    //var marker = new google.maps.Marker({
 
-      position: {lat:data.lat, lng: data.lng},
-      map: map,
-      icon: getIcon(data.type),
-      title: "id:" +  data.id
-    });
+      //position: {lat:data.lat, lng: data.lng},
+      //map: map,
+      //icon: getIcon(data.type),
+      //title: "id:" +  data.id
+    //});
 
     //markers[data.id] = data;
 
@@ -35,12 +35,12 @@ function defaultCallback(obj) {
     points.push({location: latlng, weight: data.intensity});
     console.log('afterpointspush');
     // Center on coordinate
-    //map.panTo(latlng);
+    map.panTo(latlng);
     console.log('aftermappan');
-    // Update polyfill path
-    //var path = flightPath.getPath();
+
+    var path = flightPath.getPath();
     //console.log('path',path);
-    //path.push(latlng);
+    path.push(latlng);
     // Update marker
     console.log('beforemarkersetposition',latlng)
     marker.setPosition(latlng);

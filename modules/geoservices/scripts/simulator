@@ -23,6 +23,7 @@ var intensity = JSON.parse(response.body).intensity;
 payload.intensity = intensity;
 
 var payload = JSON.stringify(payload);
+storage.global.status = payload;
 console.log(payload);
 publish("map", payload);
 return payload;

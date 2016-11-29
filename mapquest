@@ -1,0 +1,112 @@
+var http = require('http');
+var airspaceLib = require('airspace');
+var airspace = new airspaceLib.Airspace();
+
+function Mapquest () {
+  this.key = "ZSpNitL5Y2YGr1j7Ffm3dvpRj4mkGjEp"
+}
+
+Mapquest.prototype.post = function(locationStart, locationEnd) { //start lat, start long, end physical address
+  var self = this;
+  
+  var options = {
+    url: 'http://www.mapquestapi.com/directions/v2/route?key='+ self.key,
+    method: 'POST',
+    headers: {
+    	'Accept': 'application/json'
+    },
+    bodyString: JSON.stringify({
+        locations: [
+          locationStart,
+          locationEnd
+        ],
+        options: {
+          avoids: [],
+          avoidTimedConditions: false,
+          doReverseGeocode: true,
+          shapeFormat: "raw",
+          generalize: 0,
+          routeType: "fastest",
+          timeType: 1,
+          locale: "en_US",
+          unit: "m",
+          enhancedNarrative: false,
+          drivingStyle: 2,
+          highwayEfficiency: 21.0      
+        }
+      })
+  };
+  
+  var response = http.request(options);
+  if (response.status === "200") {
+    var res = JSON.parse(response.body);
+    if (res.route && res.route.shape && res.route.shape.shapePoints) {
+      //var shapePoints = res.route.shape.shapePoints;
+      // console.log('response ' + JSON.stringify(shapePoints));
+      
+      return res.route.shape.shapePoints;
+    }
+  }
+  return [];
+}
+
+
+Mapquest.prototype.addressToLatLong = function (address) { 
+  var self = this;
+  
+  var options = {
+    url: 'http://www.mapquestapi.com/geocoding/v1/address?key='+self.key,
+    method: 'POST',
+    headers: {
+    	'Accept': 'application/json'
+    },
+    bodyString: JSON.stringify({
+       location: address,
+       options: {
+         thumbMaps: false
+       }
+     })
+  }
+  
+  var response = http.request(options);
+  if (response.status === "200") {
+    var res = JSON.parse(response.body);
+   // console.log('res ' + JSON.stringify(res));
+    if (res.results && res.results[0].locations && res.results[0].locations[0].displayLatLng) {
+      var displayLatLng = res.results[0].locations[0].displayLatLng;
+      //console.log(' displayLatLng ' + JSON.stringify(displayLatLng));
+      if (displayLatLng.lat && displayLatLng.lng) {
+        return displayLatLng;
+      }  
+    }
+  }
+  return null;
+}
+
+
+Mapquest.prototype.latLongToAddress = function (lat, lng) { 
+  var self = this;
+  
+  var options = {
+    url: 'http://www.mapquestapi.com/geocoding/v1/reverse?key='+self.key +'&location='+lat+','+lng,
+    method: 'GET',
+    headers: {
+    	'Accept': 'application/json'
+    }
+  }
+  
+  var response = http.request(options);
+  if (response.status === "200") {
+    var res = JSON.parse(response.body);
+   console.log('res ' + JSON.stringify(res));
+    if (res.results && res.results[0].locations && res.results[0].locations[0]) {
+      var street = locations[0].street;
+        //NEED TO FINISH PARSING!!!
+    }
+  }
+  return null;
+}
+
+//new Mapquest().addressToLatLong('308 East 8th Street, Brooklyn, NY 11218');
+//new Mapquest().latLongToAddress(30.333472,-81.470448);
+                
